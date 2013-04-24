@@ -6,14 +6,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
 )
 
-var languages = []string{ "JavaScript", "Ruby", "Python", "Java", "Shell", "PHP", "C", "C++", "Perl", "Objective-C", "Go", "D", "Awk", "Dart", "Clojure", "Scala", "Haskell", "Lua", "Rust", "Common Lisp", "Erlang", "CoffeeScript" }
-
 func main() {
+	languages := findLanguages()
+
 	data := map[string]uint64{}
 	for _, language := range languages {
 		data[language] = getSumForLanguage(language)
@@ -22,8 +23,40 @@ func main() {
 	enc.Encode(data)
 }
 
+func findLanguages() []string {
+	resp, err := http.Get("https://github.com/languages")
+	if err != nil {
+		return []string{}
+	}
+
+	pattern := "<li><a href=\"/languages/"
+
+	defer resp.Body.Close()
+
+	languages := []string{}
+
+	r := bufio.NewReader(resp.Body)
+	for {
+		line, err := r.ReadString('\n')
+
+		if pos := strings.Index(line, pattern); pos != -1 {
+			part := line[pos+len(pattern):]
+			lang, _ := url.QueryUnescape(strings.Split(part, "\"")[0])
+			languages = append(languages, lang)
+		}
+
+		if err != nil {
+			break
+		}
+	}
+
+	return languages
+}
+
 func getSumForLanguage(language string) uint64 {
+	language = strings.Replace(language, "#", "%23", -1)
 	url := fmt.Sprintf("https://github.com/languages/%s/most_watched", language)
+
 
 	resp, err := http.Get(url)
 	if err != nil {
