@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>GLIP Scores</title>
+</head>
+	<table border="1">
+		<tr><th>Language</th><th>Score</th></tr>
+		{{range .}}<tr><td>{{.Name}}</td><td>{{.Score}}</td></tr>
+		{{end}}
+	</table>
+</html>
