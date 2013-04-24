@@ -6,11 +6,26 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"sort"
 )
 
 type entry struct {
 	Name string
 	Score uint64
+}
+
+type sortableEntries []entry
+
+func (s sortableEntries) Len() int {
+	return len(s)
+}
+
+func (s sortableEntries) Less(i, j int) bool {
+	return s[i].Score > s[j].Score // we want biggest to be first.
+}
+
+func (s sortableEntries) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
 }
 
 func main() {
@@ -34,7 +49,7 @@ func main() {
 		entries = append(entries, entry{Name: language, Score: score})
 	}
 
-	// TODO: sort entries
+	sort.Sort(sortableEntries(entries))
 
 	if err = tmpl.Execute(os.Stdout, entries); err != nil {
 		log.Fatalf("tmpl.Execute failed: %v", err)
