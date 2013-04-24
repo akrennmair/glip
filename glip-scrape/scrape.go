@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -12,9 +14,12 @@ import (
 var languages = []string{ "JavaScript", "Ruby", "Python", "Java", "Shell", "PHP", "C", "C++", "Perl", "Objective-C", "Go", "D", "Awk", "Dart", "Clojure", "Scala", "Haskell", "Lua", "Rust", "Common Lisp", "Erlang", "CoffeeScript" }
 
 func main() {
+	data := map[string]uint64{}
 	for _, language := range languages {
-		fmt.Printf("%d %s\n", getSumForLanguage(language), language)
+		data[language] = getSumForLanguage(language)
 	}
+	enc := json.NewEncoder(os.Stdout)
+	enc.Encode(data)
 }
 
 func getSumForLanguage(language string) uint64 {
