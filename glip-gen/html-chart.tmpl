@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="https://www.google.com/jsapi"></script>
+	<script>
+
+	google.load('visualization', '1.0', {'packages':['corechart']});
+
+	google.setOnLoadCallback(drawChart);
+
+	function drawChart() {
+		var data = new google.visualization.DataTable();
+		data.addColumn('string', 'Language');
+		data.addColumn('number', 'GLIP Score');
+		data.addRows([
+			{{range .}}[ '{{.Name}}', {{.Score}} ],
+			{{end}}[ null, null ]
+		]);
+
+		var options = {
+			'title': 'GLIP Statistics', 
+			'width': 960, 
+			'height': 1024, 
+			'vAxis': {
+				'logScale': true
+			}
+		};
+
+		var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+		chart.draw(data, options);
+	}
+	</script>
+</head>
+<body>
+	<div id="chart_div"></div>
+</body>
+</html>
