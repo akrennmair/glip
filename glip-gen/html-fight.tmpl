@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+	<meta charset="utf-8">
+	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+	<script src="https://www.google.com/jsapi"></script>
+	<script>
+
+	google.load('visualization', '1.0', {'packages':['corechart']});
+
+	function GlipController($scope) {
+		$scope.languageList = [ ];
+		{{range .}}$scope.languageList.push({name: '{{.Name}}', score: {{.Score}}, rank: {{.Rank}} });
+		{{end}}
+
+		$scope.show = "rank";
+		$scope.lang1 = null;
+		$scope.lang2 = null;
+
+		$scope.showFight = function() {
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Language');
+			data.addColumn('number', 'GLIP Score');
+			data.addRows([ 
+				[ $scope.lang1.name, $scope.lang1.score ],
+				[ $scope.lang2.name, $scope.lang2.score ]
+			]);
+			var options = {
+				'title': 'GLIP Fight', 
+				'width': 960, 
+				'height': 480, 
+				'vAxis': {
+					'viewWindowMode': 'explicit',
+					'viewWindow': {
+						'min': 0
+					}
+				}
+			};
+			var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+			chart.draw(data, options);
+		};
+	}
+	</script>
+</head>
+<body ng-controller="GlipController">
+	<div class="container">
+		<h1>GitHub Language Index of Popularity</h1>
+		<ul class="nav nav-tabs">
+			<li ng-class="{active: show=='rank'}"><a ng-click="show='rank'">GLIP Ranking</a></li>
+			<li ng-class="{active: show=='fight'}"><a ng-click="show='fight'">GLIP Fight</a></li>
+		</ul>
+		<div class="row" ng-show="show=='rank'">
+			<table class="table table-bordered table-striped">
+				<tr>
+					<th>#</th>
+					<th>Programming Language</th>
+					<th>GLIP Score</th>
+				</tr>
+				<tr ng-repeat="lang in languageList">
+					<td ng-bind="lang.rank"></td>
+					<td ng-bind="lang.name"></td>
+					<td ng-bind="lang.score"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="row" ng-show="show=='fight'">
+			<div style="width: 960px; height: 480px;" id="chart_div"></div>
+			<select ng-model="lang1" ng-options="lang.name for lang in languageList"></select>
+			<button ng-active="lang1 && lang2" ng-click="showFight()" class="btn btn-primary">Fight!</button>
+			<select ng-model="lang2" ng-options="lang.name for lang in languageList"></select>
+		</div>
+	</div>
+</body>
+</html>

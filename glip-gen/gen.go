@@ -10,8 +10,9 @@ import (
 )
 
 type entry struct {
-	Name string
+	Name  string
 	Score uint64
+	Rank  int
 }
 
 type sortableEntries []entry
@@ -50,6 +51,9 @@ func main() {
 	}
 
 	sort.Sort(sortableEntries(entries))
+	for i, _ := range entries {
+		entries[i].Rank = i + 1
+	}
 
 	if err = tmpl.Execute(os.Stdout, entries); err != nil {
 		log.Fatalf("tmpl.Execute failed: %v", err)
