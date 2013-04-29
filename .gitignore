@@ -1,0 +1,4 @@
+*.json
+*.html
+glip-gen/glip-gen
+glip-scrape/glip-scrape
