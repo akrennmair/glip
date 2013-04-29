@@ -75,13 +75,13 @@
 		</div>
 		<div class="row">
 			<div class="span4 text-center">
-				<select ng-model="lang1" ng-options="lang.name for lang in languageList"></select>
+				<select ng-model="lang1" ng-options="lang.name for lang in languageList | orderBy:'name'"></select>
 			</div>
 			<div class="span4 text-center">
 				<button ng-active="lang1 && lang2" ng-click="showFight()" class="btn btn-primary" ng-class="{disabled: !lang1 || !lang2}">Fight!</button>
 			</div>
 			<div class="span4 text-center">
-				<select ng-model="lang2" ng-options="lang.name for lang in languageList"></select>
+				<select ng-model="lang2" ng-options="lang.name for lang in languageList | orderBy:'name'"></select>
 			</div>
 		</div>
 	</div>
