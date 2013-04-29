@@ -12,13 +12,30 @@ import (
 	"strings"
 )
 
+type langsum struct {
+	language string
+	sum uint64
+}
+
 func main() {
 	languages := findLanguages()
 
 	data := map[string]uint64{}
+
+	datachan := make(chan langsum)
+
 	for _, language := range languages {
-		data[language] = getSumForLanguage(language)
+		go func(language string) {
+			sum := getSumForLanguage(language)
+			datachan <- langsum{language: language, sum: sum}
+		}(language)
 	}
+
+	for i := 0; i < len(languages); i++ {
+		langSum := <-datachan
+		data[langSum.language] = langSum.sum
+	}
+
 	enc := json.NewEncoder(os.Stdout)
 	enc.Encode(data)
 }
