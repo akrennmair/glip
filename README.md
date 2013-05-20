@@ -10,6 +10,12 @@ This program scrapes GitHub (there's not API for that kind of stuff, yet) for
 that information and generates a table for comparison.
 
 
+Example
+-------
+
+    go run glip-scrape/scrape.go | go run glip-gen/gen.go -t glip-gen/html-chart.tmpl > chart.html
+
+
 Author
 ------
 
