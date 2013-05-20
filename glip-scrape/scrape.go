@@ -87,7 +87,7 @@ func getSumForLanguage(language string) uint64 {
 	for {
 		line, err := r.ReadString('\n')
 
-		if strings.Contains(line, "mini-icon-star") {
+		if strings.Contains(line, "octicon-star") {
 			elems := strings.Split(line, " ")
 			starsStr := strings.TrimRight(strings.Replace(elems[len(elems)-1], ",", "", -1), "\r\n\t ")
 			stars, err := strconv.ParseUint(starsStr, 10, 64)
